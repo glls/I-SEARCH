@@ -901,7 +901,6 @@ li.token-input-token-isearch  audio,
 li.token-input-token-isearch  video {
   position: relative;
   border: 1px solid #aaa;
-  max-height: 30px;
 }
 
 li.token-input-token-isearch .progressBar {
@@ -1026,7 +1025,11 @@ nav.resultView {
 nav ul {
 	padding: 0 20px;
 	height: 70px;
+<<<<<<< HEAD
+	width: 360px; /* 630 + 2*20 = 470 <= real width of our menu */
+=======
 	width: 630px; /* 630 + 2*20 = 670 <= real width of our menu */
+>>>>>>> d0956474d45085a1cc6f105f43cd8e9545049034
 	margin: auto;
 	text-align: center;
 }

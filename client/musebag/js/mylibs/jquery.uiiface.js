@@ -36,7 +36,8 @@ define("mylibs/uiiface-v1",
      *  -------------------------------------------
      *  Core UIIFace object
      *  -------------------------------------------
-     */
+
+ *     */
     var UIIFace = {
       //is UIIFace ready to work?
       isReady : false,
@@ -83,72 +84,40 @@ define("mylibs/uiiface-v1",
           },
           'drop'      : {
             'mouse'    : { 'events' : 'drop dragenter dragleave', 'context' : 'this' },
-            'handler'  : function(event, ui) {
-              event.preventDefault();
-              
+            'handler'  : function(event) {
               switch(event.type) {
                 case 'dragenter' :
-                  var elem = $(event.target);
+                  var elem = $(event.currentTarget);
                   var count = elem.data('dragenter-count');
                   count = (count || 0) + 1;
                   elem.data('dragenter-count', count);
                   if (count === 1) {
-                    $(event.currentTarget).addClass("over");
                     elem.addClass('over');
-                    elem.css({
-                      'border' : '1px solid #999',
-                      'background-color' : '#CFA',
-                      'color': '#222'
-                    });
                   }
                   break;
                 case 'dragleave' :
-                  var elem = $(event.target);
+                  var elem = $(event.currentTarget);
                   var count = elem.data('dragenter-count');
                   --count;
                   elem.data('dragenter-count', count);
                   if (!count) {
-                    $(event.currentTarget).removeClass("over");
                     elem.removeClass('over');
-                    elem.removeAttr('style');
                   }
                   break;
                 case 'drop' :
                   //check if there is an custom handler which should be called for this event
-                  var elem = $(event.target);
+                  event.preventDefault();
+                  var elem = $(event.currentTarget);
                   elem.data('dragenter-count', 0);
                   elem.removeClass('over');
-                  elem.removeAttr('style');
-                  $(event.currentTarget).removeClass("over");
+                  $(event.target).removeClass("over");
                   if(typeof event.data.customHandler === 'function') {
-                    if(ui) {
-                      event.ui = ui;
-                    }
                     event.data.customHandler.apply(this, [event]);
                   }
                   break;
               }
-              
-              event.stopPropagation();
-              return false;
             },
-            'internalHandlerCall': true,
-            'additionalInit' : function(element,handler,customHandler) {
-              //If jquery ui is used than make sure to also register UI droppable events
-              //in order to work with UIIFace
-              if($(element).droppable) {
-                $(element).droppable({
-                  over : function(e,ui) {
-                    e.type = 'dragenter';
-                    handler.apply(this,[e,ui]);
-                  },
-                  out  : function(e,ui) {
-                    e.type = 'dragleave';
-                    handler.apply(this,[e,ui]);
-                  }
-                });
-              }
-            }
+            'internalHandlerCall': true
           },
           'pan'       : {
             'trigger'    : { 'events' : 'down move up', 'context' : 'this' },
@@ -231,21 +200,22 @@ define("mylibs/uiiface-v1",
 
               var offset = $(this).offset();
               var context = canvas.getContext('2d');
-
-              event.epoints.foreach(function(key, point) {
-                //console.log(key + '= x:'+parseFloat(point.x - offset.left)+' y:'+parseFloat(point.y - offset.top));
-                context.strokeStyle = 'rgba(40,0,0,.3)';
-                context.lineWidth = 3;
-                context.lineCap = 'round';
-                context.lineJoin = 'round';
-                context.beginPath();
-                context.moveTo(parseFloat(point.oldX - offset.left), parseFloat(point.oldY - offset.top));
-                context.lineTo(parseFloat(point.x - offset.left), parseFloat(point.y - offset.top));
-                context.closePath();
-                context.stroke();
-              });
-            }
-          }
+                                event.epoints.foreach(function(key, point) {                
+                                    //console.log(key);// + '= x:'+parseFloat(point.x - offset.left)+' y:'+parseFloat(point.y - offset.top));
+                                    //context.strokeStyle = 'rgba(40,0,0,.3)';
+                                    context.strokeStyle = 'rgba(0,0,0,1)';
+                                    context.lineWidth = 3;
+                                    context.lineCap = 'round';
+                                    context.lineJoin = 'round';
+                                    context.beginPath();
+                                    context.moveTo(parseFloat(point.oldX - offset.left), parseFloat(point.oldY - offset.top));
+                                    context.lineTo(parseFloat(point.x - offset.left), parseFloat(point.y - offset.top));
+                                    context.closePath();
+                                    context.stroke();
+                                });
+                            }
+          
+                    } // end sketch
         } // end eventRegister object
       },
       /**
@@ -313,14 +283,9 @@ define("mylibs/uiiface-v1",
             handler = self.options.callback;
           }
         }
-        
-        //execute additional initialization for event if desired by event configuration
-        if(eventDefinition.additionalInit && typeof eventDefinition.additionalInit === 'function') {
-          eventDefinition.additionalInit.apply(this,[self.element, handler, customHandler]);
-        }
-        
         //always assign custom event to element for reference
         $(self.element).on(event, { customHandler : customHandler }, handler);
+
         var getEventElement = function(element) {
           var foundItem = false;
 
@@ -677,7 +642,7 @@ define("mylibs/uiiface-v1",
               self.test.refPoints = $.extend({},self.epoints);
               return true;
             },
-            handlePoints : function(e,mode) {
+            handlePoints : function(e, mode) {
               //Normalizing different touch API data to the
               //basic touch API
               if(!e.originalEvent.changedTouches ) {
@@ -764,6 +729,7 @@ define("mylibs/uiiface-v1",
                   'pageX' : e.originalEvent.pageX,
                   'pageY' : e.originalEvent.pageY
                 }];
+                self.mousebutton = e.button;
                 self.handlePoints(e,1);
                 //If mouse is down then we listen to mousemove events
                 $(element).on('mousemove MozTouchMove', function(e) {

@@ -20,6 +20,7 @@ function InfoBox(opts) {
   this.data = opts.data ;
   this.thumbRenderer = opts.thumbRenderer ;
   this.modalities = opts.modalities ;
+  this.renderOptions = opts.renderOptions ;
 
   var me = this;
   this.boundsChangedListener_ =
@@ -368,7 +369,7 @@ function ScaleBarControl(controlDiv, map) {
 
 
 /////////////////////////////////////////////////////////////////////////////////
-GoogleMap = function(mapDiv, thumbRenderer, modalities, layers_) {
+GoogleMap = function(mapDiv, thumbRenderer, modalities, renderOptions, layers_) {
 
 	this.map = null ;
 	this.layers = [] ;
@@ -376,6 +377,7 @@ GoogleMap = function(mapDiv, thumbRenderer, modalities, layers_) {
 	this.visibleInfoWindow = null ;
 	this.thumbRenderer = thumbRenderer ;
 	this.modalities = modalities ;
+	this.renderOptions = renderOptions ;
 	
 	this.initMap(mapDiv, layers_) ;
 };
@@ -497,7 +499,8 @@ p.addLayers = function(_layers)
 				google.maps.event.addListener(marker, "click", 	(function(data, marker) { 
 					return function(e) {
 						if ( obj.visibleInfoWindow ) obj.visibleInfoWindow.close() ;
-						obj.visibleInfoWindow = new InfoBox({latlng: marker.getPosition(), map: map, data: data.data, thumbRenderer: obj.thumbRenderer, modalities: obj.modalities});
+						obj.visibleInfoWindow = new InfoBox({latlng: marker.getPosition(), map: map, data: data.data, 
+							thumbRenderer: obj.thumbRenderer, modalities: obj.modalities, renderOptions: obj.renderOptions});
 						}
 					})(data, marker));
 				

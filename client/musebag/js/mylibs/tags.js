@@ -33,9 +33,9 @@ define("mylibs/tags",
           docs.push({ doc: doc }) ;
         }
 
-        callback(docs) ;
-		  }
-		});  
+                    callback(docs) ;
+                }
+            });  
   };
  
   
@@ -43,49 +43,54 @@ define("mylibs/tags",
   
   	var media = null ;
   	
-    for(var i=0 ; i<doc.media.length ; i++ )
-  	{
-  		var mediaObj = doc.media[i] ;
-  		if ( mediaObj.type == mtype ) {
-  			media = mediaObj ;
-  			break ;
-  		}
-  	}
+            for(var i=0 ; i<doc.media.length ; i++ )
+            {
+                var mediaObj = doc.media[i] ;
+                if ( mediaObj.type == mtype ) {
+                    media = mediaObj ;
+                    break ;
+                }
+            }
   	
-  	var query = $('#query-field').val();
+            var query = $('#query-field').val();
   	  
-  	//Create the token for the search bar
-  	 var id = "recommendItem" + recItemCount;
-  	 var token = "";
+            //Create the token for the search bar
+            var id = "recommendItem" + recItemCount;
+            var token = "";
+            console.log(doc);
+            
+            token  = '<img id="' + id + '" alt="" src="' + media.previews[0].url + '" ' +
+            'data-subtype="'+doc.coid+'" data-type="relevant" data-url="' + media.url + '" />';
+        /*
       
      if ( mtype == "ImageType" ) {
-     	token = '<img id="' + id + '" alt="" src="' + media.previews[0].url + '" ' +
-     		'class="picture" data-mode="ImageType" data-url="' + media.url + '" />';
-   	 }
-   	 else if ( mtype == "VideoType") {
-	   	 token = '<img id="' + id + '" alt="" src="' + media.previews[0].url + '" ' +
-     		'class="video" data-mode="VideoType" data-url="' + media.url + '" />';
-   	 }
-   	 else if ( mtype == "Object3D") {
-	   	 token = '<img id="' + id + '" alt="" src="' + media.previews[0].url + '" ' +
-     		'class="3d" data-mode="Object3D" data-url="' + media.url + '" />';   	 
-   	 }
-   	 else if ( mtype == "SoundType" ) {
-   	 	token = '<audio controls="controls" id="' + id + '" ' + 
-   	 	'class="audio" data-mode="SoundType" data-url="' + media.url + '" >';
+                token = '<img id="' + id + '" alt="" src="' + media.previews[0].url + '" ' +
+                'data-subtype="picture" data-type="ImageType" data-url="' + media.url + '" />';
+            }
+            else if ( mtype == "VideoType") {
+                token = '<img id="' + id + '" alt="" src="' + media.previews[0].url + '" ' +
+                'data-subtype="video" data-type="VideoType" data-url="' + media.url + '" />';
+            }
+            else if ( mtype == "Object3D") {
+                token = '<img id="' + id + '" alt="" src="' + media.previews[0].url + '" ' +
+                'data-subtype="3d" data-type="Object3D" data-url="' + media.url + '" />';   	 
+            }
+            else if ( mtype == "SoundType" ) {
+                token = '<audio controls="controls" id="' + id + '" ' + 
+                'class="audio" data-mode="SoundType" data-url="' + media.url + '" >';
    	 	   	 	
-   	 	for ( var i=0 ; i<media.previews.length ; i++ )
-      {
-      	var url = media.previews[i].url ;
-      	var format = media.previews[i].format ;
+                for ( var i=0 ; i<media.previews.length ; i++ )
+                {
+                    var url = media.previews[i].url ;
+                    var format = media.previews[i].format ;
         	
-      	if (  (/audio/i).test(format) ) {
-      	  token += '<source src="' + url + '" type="' + format + '" />' ;
-      	}
-      }   	 	
-   	 	token += '</audio>' ;
-   	 
-   	}
+                    if (  (/audio/i).test(format) ) {
+                        token += '<source src="' + url + '" type="' + format + '" />' ;
+                    }
+                }   	 	
+                token += '</audio>' ;   	 
+            }
+      */
    	
     $("#query-field").tokenInput('add',{id: id,name: token});   
     recItemCount++ ;
@@ -98,7 +103,7 @@ define("mylibs/tags",
     $('.tags a').each(function() {
       var $thisTag = $(this);
       //max: 3em
-      var fontSize = 1 + 2 * parseFloat($thisTag.attr('data-rank'));
+      var fontSize = 1 + 0.5*parseFloat($thisTag.attr('data-rank'));
       $thisTag.css('font-size', fontSize + 'em');
       $thisTag.css('margin-right', '0.4em');
     });
@@ -149,8 +154,8 @@ define("mylibs/tags",
       var tagPos = $(this).offset() ;
       
   	  popup.dialog({
-    		width: 400,
-    		height: 180,
+    		width: 380,
+    		height: 160,
     		modal: true,
     		zIndex: 100,
     		closeOnEscape: true,

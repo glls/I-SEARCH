@@ -32,8 +32,11 @@ define("mylibs/visualization/visualizer",
 		"mylibs/visualization/TreeMap",
 		"mylibs/visualization/HyperbolicTree", 
 		"mylibs/visualization/HPanel",
-		"mylibs/visualization/Cubes"], 
-    function(undefined, undefined, undefined, undefined, undefined, undefined, config, tagManager, filterBar, treeMap, hyperbolicTree, hPanel, cubes) {
+		"mylibs/visualization/Cubes",
+		"mylibs/visualization/GeoVis",
+		"mylibs/visualization/TimeVis"
+		], 
+    function(undefined, undefined, undefined, undefined, undefined, undefined, config, tagManager, filterBar, treeMap, hyperbolicTree, hPanel, cubes, geo, time) {
   
 	var widget = null;
 	var results = null;
@@ -129,7 +132,7 @@ define("mylibs/visualization/visualizer",
 		
 		//var menuPaneHtml = '<form id="vis-options" style="padding-top: 5px">'  ;
 		
-		if ( hasHierarchy && options.methods && options.methods.length > 1 ) 
+		if ( options.methods && options.methods.length > 1 ) 
 		{
 	    var methodHeader = $('<button/>', { 'class' : 'optionsHeader', text: 'Method' } ).appendTo(viewDiv) ;
 	    methodHeader.button({'icons': {secondary:'ui-icon-triangle-1-e'}});
@@ -142,18 +145,25 @@ define("mylibs/visualization/visualizer",
 				switch ( options.methods[idx] )
 				{
 					case "classic":
+					  if ( hasHierarchy ) 
 					  methodButtons.append('<input type="radio" name="method" id="vis-classic"/><label for="vis-classic">Classic</label>');
 					  //menuPaneHtml += '<input type="radio" name="method" id="vis-classic"/><label for="vis-classic">Classic</label>';
 						break ;
 					case "hpanel":
-					  methodButtons.append('<input type="radio" name="method" id="vis-hpanel"/><label for="vis-hpanel">HPanel</label>');
+					  if ( hasHierarchy ) methodButtons.append('<input type="radio" name="method" id="vis-hpanel"/><label for="vis-hpanel">HPanel</label>');
 						break ;
 					case "htree":
-					  methodButtons.append('<input type="radio" name="method" id="vis-htree"/><label for="vis-htree">Hyperbolic Tree</label>');
+					  if ( hasHierarchy ) methodButtons.append('<input type="radio" name="method" id="vis-htree"/><label for="vis-htree">Hyperbolic Tree</label>');
 						break ;
 					case "tmap":
-					  methodButtons.append('<input type="radio" name="method" id="vis-tmap"/><label for="vis-tmap">Treemap</label>');
+					  if ( hasHierarchy ) methodButtons.append('<input type="radio" name="method" id="vis-tmap"/><label for="vis-tmap">Treemap</label>');
 						break ;
+					case "geo":
+					  methodButtons.append('<input type="radio" name="method" id="vis-geo"/><label for="vis-geo">Geographic</label>');
+						break ;			
+					case "time":
+					  methodButtons.append('<input type="radio" name="method" id="vis-time"/><label for="vis-time">Temporal</label>');
+						break ;						
 				}
 			}	
 			
@@ -253,6 +263,8 @@ define("mylibs/visualization/visualizer",
 			$('#vis-hpanel', menuPane).button( {"icons": {primary:'ui-icon-method-hpanel'}});
 			$('#vis-htree', menuPane).button( {"icons": {primary:'ui-icon-method-htree'}});
 			$('#vis-tmap', menuPane).button( {"icons": {primary:'ui-icon-method-tmap'}});
+			$('#vis-geo', menuPane).button( {"icons": {primary:'ui-icon-method-geo'}});
+			$('#vis-time', menuPane).button( {"icons": {primary:'ui-icon-method-time'}});
 		//) ;
 		
 		//$("#ts-buttons", menuPane).buttonset(
@@ -330,9 +342,17 @@ define("mylibs/visualization/visualizer",
 			var opt = {} ;
 			for (var i in options) 
 			  opt[i] = options[i] ;
-      opt.showGroups = false ;
-			widget = hPanel.create(results, visPane, opt, ctx) ;
+      			opt.showGroups = false ;
+				widget = hPanel.create(results, visPane, opt, ctx) ;
 		}
+		else if ( method == "geo" ) {
+			widget = geo.create(results, visPane, options, ctx) ;
+		}
+		else if ( method == "time" ) {
+			widget = time.create(results, visPane, options, ctx) ;
+		}	
+		
+
 
   };
 
@@ -343,3 +363,4 @@ define("mylibs/visualization/visualizer",
 	  setMethod: setMethod
   };
 });
+

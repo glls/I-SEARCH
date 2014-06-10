@@ -1,4 +1,4 @@
-define("mylibs/visualization/DefaultThumbRenderer",   function() {
+define("mylibs/visualization/DefaultThumbRenderer",    function() {
 
 DummyThumbRenderer = function() {	
 	
@@ -60,8 +60,12 @@ p.render = function(item, container, options)
 	
 	if ( mediaTypes.count == 1 )
 	{
+	
 		var img = $('<div/>', { "docid": docid, css: {  position: "absolute", left: tm, top: tm, width: w - tm - tm, height: h - tm - tm }  }).appendTo(container) ;
-		img.thumb(ThumbContainer.selectThumbUrl(item.doc, options.selected)) ;
+/*		
+		var _img = $('<img/>', { "class": "image-thumbnail", "data-original": ThumbContainer.selectThumbUrl(item.doc, options.selected), css: {height: h} }).appendTo(img);
+		*/
+		img.thumb(ThumbContainer.selectThumbUrl(item.doc, options.selected), {viewport: options.scroller}) ;
 		
 		this.img = img ;
 	}
@@ -74,22 +78,20 @@ p.render = function(item, container, options)
 		var div2 = $('<div/>', 
 			{ css: { position: "absolute", left: tm, right: tm, top: tm, bottom: tm, 
 			"border-style": "solid", "border-width": "0px " + tm + "px " + tm + "px 0px", "border-color": "#afafaf" }}).appendTo(container) ;
-		var img = $('<div/>', { "docid": docid, css: { position: "absolute", left: 0,  top: 0, width: w - tm - tm, height: h - tm - tm,
-"border": "1px solid black"		}  }).appendTo(container) ;
+		var img = $('<div/>', {  "docid": docid, 
+		css: { position: "absolute", left: 0,  top: 0, width: w - tm - tm, height: h - tm - tm, "border": "1px solid black"	}  }).appendTo(container) ;
+
 		if(img.thumb) {
-		  img.thumb(ThumbContainer.selectThumbUrl(item.doc, options.selected)) ;
+		  img.thumb(ThumbContainer.selectThumbUrl(item.doc, options.selected), {viewport: options.scroller}) ;
 		}
+
 		this.img = img ;
 	}
 	
 		
 	$(img).draggable({opacity: '0.7', cursor: 'move', helper: function(e) {
-		
-	  if(!$('#draghelper').length) {
-	    $('<div/>', { css: { position : 'absolute', width: w , height: h, "z-index": 1000  }, id : 'draghelper'  }).appendTo('body');
-	  }
-	  
-	  var helper = $('#draghelper');
+			
+		var helper = $('<div/>', { css: { position: 'absolute', width: w , height: h, "z-index": 1000  }  }) ;
 		helper.thumb(ThumbContainer.selectThumbUrl(item.doc, options.modalities)) ;
 		return helper ;
 	
@@ -137,55 +139,76 @@ p.render = function(item, container, options)
 
 p.renderDocument = function(doc, mediaType)
 {
-	var url = '' ;
-	for( var i=0 ; i<doc.media.length ; i++ )
-	{
-		var media = doc.media[i] ;
+    var url = '' ;
+    for( var i=0 ; i<doc.media.length ; i++ )
+    {
+        var media = doc.media[i] ;
 		
-		if ( media.type != mediaType ) continue ;
-		else {
-			url = media.url ;
-			break ;
-		}
-	}
+        if ( media.type != mediaType ) continue ;
+        else {
+            url = media.url ;
+            break ;
+        }
+    }
 	
-	if ( this.docPreviewMode == "popup")
-	{
-		var sw = $(window).width() ;	
-		var sh = $(window).height() ;
+    if ( this.docPreviewMode == "popup")
+    {
+        var sw = $(window).width() ;	
+        var sh = $(window).height() ;
 	
-		var docPreview = $('<div/>', { title: "Document Preview"}).appendTo('body') ;
+        var docPreview = $('<div/>', {
+            title: "Document Preview"
+        }).appendTo('body') ;
 	
-	
-		var ytRx = new RegExp("https:\/\/www.youtube.com\/watch\\?v=(.*)") ;
-		var match = ytRx.exec(url) ;
-	
-		var contents ;
+        var ytRx = new RegExp("https:\/\/www.youtube.com\/watch\\?v=(.*)") ;
+        var match = ytRx.exec(url) ;	
+        var contents ;
 
-		if ( mediaType == "VideoType"  &&	match.length > 1 )
-			contents = $('<iframe/>', { width: "640", height: "385", marginWidth: "0",  marginHeight:"0",  frameBorder:"0",  	scrolling:"auto", 
-				src: "http://www.youtube.com/embed/" + match[1]}).appendTo(docPreview) ;
+        if ( mediaType == "VideoType"  && match.length > 1 ) {
+            contents = $('<iframe/>', {
+                width: "640", 
+                height: "385", 
+                marginWidth: "0", 
+                marginHeight:"0",  
+                frameBorder:"0", 
+                scrolling:"auto", 
+                src: "http://www.youtube.com/embed/" + match[1]
+            }).appendTo(docPreview) ;
+        }
+        else if (mediaType == 'Object3D')  {
+            url = 'http://vcl.iti.gr/is/webgl/index.php?model="'+url+'"';  
+            window.open(url, '_blank');
+            window.focus();
+        }
+        else {
+            contents = $('<iframe/>', {
+                width: "100%", 
+                height: "100%", 
+                marginWidth: "0",
+                marginHeight:"0",  
+                frameBorder:"0", 
+                scrolling:"auto", 
+                src: url
+            }).appendTo(docPreview) ;
+        }
+        docPreview.dialog({
+            width: 0.9*sw,
+            height: 0.9*sh,
+            modal: true,
+            close: function() {
+                docPreview.empty() ;
+            }
+        });
+    }
+    else if ( this.docPreviewMode == "url")
+    {
+        if (mediaType == 'Object3D')  
+            url = 'http://vcl.iti.gr/is/webgl/index.php?model="'+url+'"';
+        window.open(url, '_blank');
+        window.focus();
 
-		else
-			contents = $('<iframe/>', { width: "100%", height: "100%", marginWidth: "0",  marginHeight:"0",  frameBorder:"0",  scrolling:"auto", src: url}).appendTo(docPreview) ;
 	
-		docPreview.dialog({
-			width: 0.9*sw,
-			height: 0.9*sh,
-			modal: true,
-			close: function() {
-				docPreview.empty() ;
-			}
-		});
-	}
-	else if ( this.docPreviewMode == "url")
-	{
-	
-		window.open(url, '_blank');
-  		window.focus();
-
-	
-	}
+    }
 	
 }
 
@@ -348,8 +371,7 @@ p.renderContents = function(tooltip, thumb, mediaType)
 			
 			$("#audiovis", anim).click(function() {
 				if ( that.onClick ) {
-					that.onClick(thumb.doc, mediaType) ;
-				
+					that.onClick(thumb.doc, mediaType) ;				
 				}
 				else
 					that.renderDocument(thumb.doc, mediaType) ;
@@ -518,7 +540,7 @@ p.doShowTooltip = function(thumb, container, visBox)
 	else 	
 		tooltip.css("top", wh-tth-2);	
 
-		//console.log(posx + ' ' + posy) ;
+		console.log(posx + ' ' + posy) ;
 	tooltip.fadeIn('fast') ;	
 
 };	

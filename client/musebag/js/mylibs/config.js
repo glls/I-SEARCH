@@ -26,6 +26,7 @@ define("mylibs/config", [],
       //Query parameters
   	  queryOptions: {
     		maxNumResults: 100,
+            maxDistance: 200,
     		clusterType: '3D',
     		clusters0: 5,
     		clusters1: 3, 
@@ -36,17 +37,20 @@ define("mylibs/config", [],
 
       //Visualization parameters  
   	  visOptions: {
-	  	  methods: [ "classic", "tmap",  "htree", "hpanel" ], // this can be adjusted to restrict visualisation options
+	  	  methods: [ "classic", "tmap",  "htree", "hpanel", "geo", "time" ], // this can be adjusted to restrict visualisation options
 	      method: "classic", //tmap, htree, hpan, classic or cubes (or mst)
 	      thumbOptions: {
   	      thumbSize: 128, //16, 32, 48, 64, 96, 128
 		      iconArrange: "grid",
-		      iconArrangeMethods: [ "grid", "smart", "smart-grid", "list" ],
-  	      navMode: "browse",	
+		      //iconArrangeMethods: [ "grid", "smart", "smart-grid", "list" ],
+                      iconArrangeMethods: [ "grid" ],
+  	      	      navMode: "browse",	
 		      navModes: ["feedback", "browse"],
 		      feedback: ["tags", "likes"],
 		      thumbRenderer: "default",
-		      documentPreview: "url" // can be one of  ["none", "popup", "url""]
+		      showMenu: false,
+		      documentPreview: "url", // can be one of  ["none", "popup", "url""]
+		      navBarMode: "hidden" // hidden or fixed
 	      },
     		showFilterPane: true,
     	  filterBar: {
@@ -76,7 +80,8 @@ define("mylibs/config", [],
               thumbSize: 64,
               iconArrange: "list",
               iconArrangeMethods: [ "list" ],
-              thumbRenderer: "audio"
+              thumbRenderer: "audio",
+              showMenu: false
             },
             filterBar: {
               modalities: {
@@ -96,8 +101,10 @@ define("mylibs/config", [],
             thumbOptions: {
               thumbSize: 96,
               iconArrange: "grid",
-              iconArrangeMethods: [ "grid", "smart", "smart-grid", "list" ],
-              thumbRenderer: "default"
+              //iconArrangeMethods: [ "grid", "smart", "smart-grid", "list" ],
+              iconArrangeMethods: [ "grid" ],
+              thumbRenderer: "default",
+              showMenu: false
             },
             filterBar: {
               modalities: {
@@ -109,16 +116,20 @@ define("mylibs/config", [],
         }, //End uc3
         'uc6' : {
           queryOptions : {
+            maxNumResults: 200,
+            maxDistance: 200,
             clusterType : '3D',
             useCase: 'uc6'
           },
           visOptions: {
             method: "classic",
             thumbOptions: {
-              thumbSize: 128,
+              thumbSize: 96,
               iconArrange: "grid",
-              iconArrangeMethods: [ "grid", "smart", "smart-grid", "list" ],
-              thumbRenderer: "default"
+              //iconArrangeMethods: [ "grid", "smart", "smart-grid", "list" ],
+              iconArrangeMethods: [ "grid" ],
+              thumbRenderer: "default",
+              showMenu: false
             },
             filterBar: {
               modalities: { 
@@ -136,6 +147,10 @@ define("mylibs/config", [],
      * Possible URL configurations depending on a urlSetKey variable defined in the 
      * respective use case index.html
      */
+     
+    var remoteServerUrl = window.remoteServerUrl || "http://vcl.iti.gr/is/isearch/" ;    
+   
+    
     var useCaseUrls = {
       'local' : {
         // query related URLs
@@ -156,18 +171,20 @@ define("mylibs/config", [],
         useOldAuthentication  : false
       },
       'remote' : {
-        fileUploadServer      : "http://vision.iti.gr/isearch/server/scripts/upload.php",
-        queryUrl              : "http://vision.iti.gr/isearch/server/scripts/mqf.php?index=[[useCase]]",
+          		
+
+	        fileUploadServer      : remoteServerUrl + "server/scripts/upload.php",
+	        queryUrl              : remoteServerUrl + "server/scripts/mqf.php?index=[[useCase]]",
         
-        userProfileServerUrl  : "http://vision.iti.gr/isearch/server/scripts/user.php?mode=Profile&key=",
-        userLoginServerUrl    : "http://vision.iti.gr/isearch/server/scripts/user.php?mode=login",
-        userLogoutServerUrl   : "http://vision.iti.gr/isearch/server/scripts/user.php?mode=logout",
-        userRegisterServerUrl : "http://vision.iti.gr/isearch/server/scripts/register.php",
+	        userProfileServerUrl  : remoteServerUrl + "server/scripts/user.php?mode=Profile&key=",
+	        userLoginServerUrl    : remoteServerUrl + "server/scripts/user.php?mode=login",
+	        userLogoutServerUrl   : remoteServerUrl + "server/scripts/user.php?mode=logout",
+	        userRegisterServerUrl : remoteServerUrl + "server/scripts/register.php",
       
-        tagRecomUrl           : "http://vision.iti.gr/isearch/server/scripts/user.php?mode=tags&index=[[useCase]]&a=rec", 
-        filterTagUrl          : "http://vision.iti.gr/isearch/server/scripts/user.php?mode=tags&index=[[useCase]]&a=all",
-        storeTagUrl           : "http://vision.iti.gr/isearch/server/scripts/user.php?mode=tags&index=[[useCase]]&a=store",
-        useOldAuthentication  : true
+	        tagRecomUrl           : remoteServerUrl + "server/scripts/user.php?mode=tags&index=[[useCase]]&a=rec", 
+        	filterTagUrl          : remoteServerUrl + "server/scripts/user.php?mode=tags&index=[[useCase]]&a=all",
+	        storeTagUrl           : remoteServerUrl + "server/scripts/user.php?mode=tags&index=[[useCase]]&a=store",
+        	useOldAuthentication  : true
       }
     };
     
@@ -265,4 +282,3 @@ define("mylibs/config", [],
   }
 );
   
-

@@ -1445,6 +1445,14 @@ div.jqmNotice .jqmClose {
     background-image: url("../img/ui-icon-method-tmap.png") !important;
 }
 
+.ui-icon-method-geo {
+    background-image: url("../img/ui-icon-method-geo.png") !important;
+}
+
+.ui-icon-method-time {
+    background-image: url("../img/ui-icon-method-time.png") !important;
+}
+
 .ui-icon-thumbs-small {
     background-image: url("../img/ui-icon-thumb-small.png") !important;
 }

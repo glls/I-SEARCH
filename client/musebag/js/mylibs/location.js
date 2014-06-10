@@ -60,39 +60,46 @@ define("mylibs/location",
 	  map.setCenter(location);
 	};
 	
-	var showMap = function(callback) {
-	  
-	  if($('#map-dialog').length == 0) {
-	  
-	    $('<div/>', {id: "map-dialog"})
-		.appendTo('body')
-		.append('<div id="map-canvas" style="width:100%; height:100%"></div>')
-		.dialog({
-		  title: "Choose a location",
-		  width: $(window).width()*2/3,
-		  height: $(window).height()*3/4,
-		  modal: true,
-		  resizable: false,
-		  autoOpen: false,
-		  buttons: {
-			OK: function() {
-			  if(map.marker) {
-				callback(map.marker.position.lat(), map.marker.position.lng());
-			  	$(this).dialog("close");
-			  }
-			  else {
-				alert("You must Select a location!");
-			  }
-			}
-		  }
-		});
-		
-		var map = new Map(document.getElementById("map-canvas"));
-	  }
-	  
-	  $('#map-dialog').dialog('open');
-	};
-	
+ var showMap = function(callback) {
+
+      var that = this ;
+
+      if($('#map-dialog').length == 0) {
+
+        $('<div/>', {id: "map-dialog"})
+        .appendTo('body')
+        //.append('<div id="map-canvas"> </div>')
+        .dialog({
+          title: "Choose a location",
+          width: $(window).width()*2/3,
+          height: $(window).height()*3/4,
+          modal: true,
+          resizable: false,
+          autoOpen: false,
+          open: function(e, ui) {
+              that.map = new Map($(this).get(0));
+          },
+
+          buttons: {
+            OK: function() {
+              if(that.map.marker) {
+                callback(that.map.marker.position.lat(), that.map.marker.position.lng());
+                  $(this).dialog("close");
+              }
+              else {
+                alert("You must Select a location!");
+              }
+            }
+          }
+        });
+
+
+      }
+
+      $('#map-dialog').dialog('open');
+    }; 
+
+
 	return {
 	  getCurrentLocation: getCurrentLocation,
 	  showMap: showMap

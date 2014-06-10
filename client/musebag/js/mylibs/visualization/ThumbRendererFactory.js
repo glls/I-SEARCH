@@ -6,7 +6,7 @@ define("mylibs/visualization/ThumbRendererFactory",
 	
 	function(defaultThumbRenderer, audioThumbRenderer) {
     
-       	var create = function(name)
+       	var create = function(name, options)
     	{
     	
     		if ( name == "default" )

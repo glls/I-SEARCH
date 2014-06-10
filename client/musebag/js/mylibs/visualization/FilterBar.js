@@ -97,29 +97,32 @@ define("mylibs/visualization/FilterBar",  ["mylibs/location"],
     }
 		
     setToggleCallback(mediaHeader,mediaButtons);
-    
-		// draw tag filter bar
-    var tagHeader = $('<button/>', { 'class' : 'optionsHeader', text: 'Tags' } ).appendTo(filterDiv) ;
-    tagHeader.button({'icons': {secondary:'ui-icon-triangle-1-e'}});
-		var tagContainer = $('<div/>', { id: 'filter-tag-editor', 'class' : 'options' }).appendTo(filterDiv) ;
+   
+   	
+	// draw tag filter bar
+			
+	 var tagHeader = $('<button/>', { 'class' : 'optionsHeader', text: 'Tags' } ).appendTo(filterDiv) ;
+    	tagHeader.button({'icons': {secondary:'ui-icon-triangle-1-e'}});
+		var tagContainer = $('<div/>', { 'class' : 'options' }).appendTo(filterDiv) ;
 		
-		tagManager.load(function(tags) {
-		  var tagEditor = new TagEditor(tagContainer, [], tags, function(fTags) {
-	      
-	      filterTags = fTags || [];
-
-	      //Original version
-	      /*
-	      filterTags = [] ;
-	      
-	      for( tag in this.tags ) { 
-	        if ( this.tags[tag] == 2 )  filterTags.push(tag) ;
-	      }
-	      */    
-	      filter() ;
-	      rerank() ;
-	      
-	    }) ;
+		var tags = currentTags = tagManager.tags ;
+		
+		var tagEditorDiv = $('<div/>', { id: "filter-tag-editor", css: { display: "table-cell" } }).appendTo(tagContainer) ;
+		
+		var tagEditor = new TagEditor(tagContainer, [], tags, function() {
+		
+			filterTags = [] ;
+			
+			for( tag in this.tags )	{	
+				if ( this.tags[tag] == 2 ) 	filterTags.push(tag) ;
+			}
+			
+			
+			filter() ;
+			rerank() ;
+			
+			return false ;
+			
 		}) ;
 		
 		setToggleCallback(tagHeader,tagContainer);
@@ -152,6 +155,8 @@ define("mylibs/visualization/FilterBar",  ["mylibs/location"],
 						if ( docs[i].tags[k] != null) 
 						{
 							if (filterTags[j].toLowerCase() === docs[i].tags[k].toLowerCase()) {
+							  //console.log(filterTags[j].toLowerCase() + ' - ' + docs[i].tags[k].toLowerCase());
+							  //console.log('hello');
 							  docs[i].filtered = false;
 								break ;
 							}
@@ -186,6 +191,7 @@ define("mylibs/visualization/FilterBar",  ["mylibs/location"],
 		
 		if ( sortby == 'time' ) {
 			docs.sort(function(a, b) { 
+				if ( a.rw && b.rw)
 				if ( a.rw.time && b.rw.time )
 					return new Date(b.rw.time.dateTime) - new Date(a.rw.time.dateTime)  ; 
 				else return 0 ;
@@ -205,7 +211,7 @@ define("mylibs/visualization/FilterBar",  ["mylibs/location"],
 					var lon = position.coords.longitude ;
 				
 					docs.sort(function(a, b) { 
-					
+						if ( b.rw && a.rw )
 						if ( b.rw.pos && a.rw.pos )
 						{	
 							var distb = geodist(b.rw.pos.coords.lat, b.rw.pos.coords.lon, lat, lon) ;

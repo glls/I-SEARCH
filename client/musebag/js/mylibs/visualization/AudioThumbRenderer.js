@@ -20,13 +20,11 @@ p.render = function(item, container, options)
 	var h = $(container).height() ;
 	
 	var tw = h, th = h ;
-		;
 	var visBox = options.viewport ;
 		
 	var docid = ( item.doc.coid ) ? item.doc.coid : item.doc.id ;
-	
-	var mediaType = this.getMediaType(item) ;
 
+	var mediaType = this.getMediaType(item) ;
 	
 	var img = $('<div/>', { "docid": docid, css: {   width: tw, height: th }   }).appendTo(container) ;
 	var thumbDiv = $('<div/>', { css: {  position: "absolute", left: tm, top: tm, width: tw - tm - tm, height: th - tm - tm }}).appendTo(img) ;
@@ -45,10 +43,8 @@ p.render = function(item, container, options)
 		
 	this.img = thumbDiv ;
 
-	// setup tooltip mode
-	
-	var obj = this ;
-	
+	// setup tooltip mode	
+	var obj = this ;	
 	thumbDivOverlay.click(function(e) {
 		obj.showTooltip(item, container, visBox, true) ;
 		return false ;
@@ -57,7 +53,6 @@ p.render = function(item, container, options)
 	img.mouseout( 	function(e) {
 		if ( !$('.tooltip').is(':visible') ) obj.hoverItem = null ;
 	}) ;
-		
 
 } ;
 
@@ -98,7 +93,6 @@ p.doShowTooltip = function(thumb, container, visBox)
 	
 			
 	// now render the contents
-		
 	this.renderContents(tooltip, thumb) ;
 		
 	var ttw = tooltip.outerWidth() ;	
@@ -227,19 +221,13 @@ p.renderContents = function(tooltip, thumb)
 				return false ;
 			}) ;
 		
-		}
-			
-		
-				
+		}						
 		break ;
 	}
-		
-	
+			
 	if(desc) {
 	  $('<p/>', { css: { "float": "left", "max-height": "60px", "overflow": "hidden", "text-overflow": "ellipsis"}, text: desc}).appendTo(tooltipContents);
-	}
-	
-	
+	}	
 }
 
 p.getMediaType = function(thumb)

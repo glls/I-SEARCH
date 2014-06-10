@@ -1,5 +1,6 @@
 define("mylibs/recorder",  [ "!js/libs/swfobject.js"],	function() {
-
+//GL
+return;
 var Wami = window.Wami || {};
 Wami._callbacks = Wami._callbacks || {};
 

@@ -11,6 +11,7 @@ var p = TagEditor.prototype;
 
 p.create = function()
 {
+/*
   if(this.allTags.length < 1) {
     this.ele.append('<p>No filter tags</p>');
   } else {
@@ -36,8 +37,9 @@ p.create = function()
       });
     }
   }
+  */
   //Original version
-	/*
+	
 	var tagsDiv = $('<div/>', { "class": "tags-container" }).appendTo(this.ele) ;
 	
 	this.tagsContainer = tagsDiv ;
@@ -66,12 +68,14 @@ p.create = function()
 			if ( that.callBack ) that.callBack() ;
 			event.preventDefault();
 		}
+		
+	
    }) ;
    
    $(tagInput).focus(function(event) {
 		$(this).attr("value", "") ;
 	}) ;
-	*/
+	
 /*
 	var tagsClear = $('<div/>', { "class": "tags-clear" }).appendTo(addTagDiv) ;
 		
@@ -109,6 +113,8 @@ p.appendTagBox = function(tag, tagsDiv)
 		box.remove() ;
 		
 		that.callBack() ;
+		
+		return false ;
 	}) ;	
 };
 

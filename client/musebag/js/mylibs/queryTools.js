@@ -7,20 +7,7 @@ define("mylibs/queryTools", [
   ],
   function(config) {
     
-    var request_template = '<llExtractorRequest>' +
-                           '<contentObjectID>[[OBJECTID]]</contentObjectID>' +
-                           '<fileFormat>movie/mp4</fileFormat>' +
-                           '<mediaName>[[VIDEONAME]]</mediaName>' +
-                           '<mediaUser></mediaUser>' +
-                           '<mediaPassword></mediaPassword>' +
-                           '<mediaURL>[[VIDEOURL]]</mediaURL>' +
-                           '</llExtractorRequest>'; 
-    
-    var startVideoKeyframeExtraction = function(videoURL) {
-      
-    }; 
-    
-    var setupVideoKeyframeSelector = function() {
+    function setupVideoKeyframeSelector () {
       var $videoKeyframes = $('#videoKeyframes');
       /*HACK: this is just a temporary hack to develop the UI for
        * the video upload.

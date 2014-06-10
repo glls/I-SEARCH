@@ -33,7 +33,7 @@ require([
      "mylibs/jquery.uiiface",
      "libs/jquery.tokeninput",
      "libs/smiley-slider",
-     "http://widget-cdn.rpxnow.com/js/lib/isearch/engage.js"
+     //GL:"http://widget-cdn.rpxnow.com/js/lib/isearch/engage.js"
     ], 
     function($, menu, header, tags, results, query, profile, loader) {
 
@@ -55,7 +55,7 @@ require([
           //Register use case change
           menu.setupQueryOptions();
                             
-          //Initializes the header with it panels and setup all event handlers
+          //Initializes the header with it's panels and setup all event handlers
           header.init();          
           
           //Get tokens and load them as auto suggestions for the user
